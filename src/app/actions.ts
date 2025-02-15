@@ -29,7 +29,7 @@ export async function getScoreUpdates() {
   const { data: scoreUpdates } = await server
     .from("score_updates")
     .select("*")
-    .order("created_at");
+    .order("created_at", { ascending: false });
 
   return scoreUpdates as ScoreUpdate[];
 }
