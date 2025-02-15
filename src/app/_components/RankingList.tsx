@@ -4,12 +4,12 @@ import { cn } from "@/lib/utils";
 export default function RankingList({ teams }: { teams: Team[] }) {
   return (
     <section>
-      <ul className="space-y-2 font-semibold">
+      <ul className="space-y-4 font-semibold">
         {teams?.map((team) => (
           <li
             key={team.id}
             className={cn(
-              "flex items-center rounded-lg p-4",
+              "flex items-center rounded-lg border border-cyan-400/20 p-4",
               "bg-slate-900/70 bg-linear-to-b from-pink-500/20 to-cyan-800/20 shadow-[inset_0_20px_20px_-18px_rgba(255,255,255,0.3)] drop-shadow-md",
             )}
           >

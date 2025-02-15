@@ -19,15 +19,15 @@ export default function ScoreLogs({
   return (
     <section
       className={cn(
-        "h-[84vh] rounded-md p-8 text-2xl text-slate-100/80",
+        "h-[84vh] rounded-md border border-cyan-400/20 p-8 text-2xl text-slate-100/80",
         "bg-slate-900/90 bg-linear-to-b from-pink-500/10 to-cyan-800/20 to-50% shadow-[inset_0_20px_20px_-18px_rgba(255,255,255,0.2)] drop-shadow-md",
       )}
     >
-      <ul className="h-full max-h-full space-y-2 overflow-y-auto">
+      <ul className="h-full max-h-full overflow-y-auto">
         {scoreUpdates?.map((log, index) => (
           <li
             key={log.id}
-            className="grid grid-cols-[1fr_5fr_2fr_auto]"
+            className="grid grid-cols-[1fr_5fr_2fr_auto] border-b border-cyan-400/20 px-2 py-4"
             style={{ opacity: Math.max(1 - index * 0.08, 0.5) }}
           >
             <div className="justify-self-end">{log.team_name}</div>
