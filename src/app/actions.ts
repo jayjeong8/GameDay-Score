@@ -67,7 +67,7 @@ export async function updateTeamScore(
     })
     .eq("id", teamId);
 
-  // 전체 팀 조회 (점수 내림차순, 이름 오름차순으로 정렬)
+  // 전체 팀 조회 (점수 내림차순 정렬)
   const { data: allTeams } = await server
     .from("teams")
     .select("*")
