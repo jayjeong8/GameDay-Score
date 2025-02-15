@@ -4,10 +4,21 @@ import type { Team } from "@/app/types";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/utils/supabase/server";
 
-export async function getTeams() {
+export async function getTeamsByRankAsc() {
   const server = await createClient();
 
   const { data: teams } = await server.from("teams").select("*").order("rank");
+
+  return teams as Team[];
+}
+
+export async function getTeamsByNameAsc() {
+  const server = await createClient();
+
+  const { data: teams } = await server
+    .from("teams")
+    .select("*")
+    .order("team_name");
 
   return teams as Team[];
 }

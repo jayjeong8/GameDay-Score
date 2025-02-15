@@ -1,9 +1,9 @@
 import Image from "next/image";
 import RankingList from "./_components/RankingList";
-import { getTeams } from "./actions";
+import { getTeamsByRankAsc } from "./actions";
 
 export default async function Home() {
-  const teams = await getTeams();
+  const teams = await getTeamsByRankAsc();
 
   return (
     <main className="h-full w-full overflow-x-hidden bg-gray-700 bg-linear-120 from-slate-900 to-violet-800/30 to-90% px-5">
