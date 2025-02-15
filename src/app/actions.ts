@@ -1,6 +1,6 @@
 "use server";
 
-import type { Team } from "@/app/types";
+import type { Team, ScoreUpdate } from "@/app/types";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/utils/supabase/server";
 
@@ -21,6 +21,17 @@ export async function getTeamsByNameAsc() {
     .order("team_name");
 
   return teams as Team[];
+}
+
+export async function getScoreUpdates() {
+  const server = await createClient();
+
+  const { data: scoreUpdates } = await server
+    .from("score_updates")
+    .select("*")
+    .order("created_at");
+
+  return scoreUpdates as ScoreUpdate[];
 }
 
 export async function updateTeamScore(
