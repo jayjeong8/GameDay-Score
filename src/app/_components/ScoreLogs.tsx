@@ -20,7 +20,7 @@ export default function ScoreLogs({
     <section
       className={cn(
         "h-[84vh] rounded-md p-8 text-2xl text-slate-100/80",
-        "bg-slate-900/90 bg-linear-to-b from-pink-500/20 to-cyan-800/20 shadow-[inset_0_20px_20px_-18px_rgba(255,255,255,0.2)] drop-shadow-md",
+        "bg-slate-900/90 bg-linear-to-b from-pink-500/10 to-cyan-800/20 to-50% shadow-[inset_0_20px_20px_-18px_rgba(255,255,255,0.2)] drop-shadow-md",
       )}
     >
       <ul className="h-full max-h-full space-y-2 overflow-y-auto">
