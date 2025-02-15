@@ -40,8 +40,8 @@ export default function ScoreLogs({
                 log.score_change > 0 ? "text-green-300" : "text-red-300",
               )}
             >
-              <span className="mr-1">{log.score_change > 0 ? "+" : ""}</span>
-              {log.score_change}
+              <span className="mr-1">{log.score_change > 0 ? "+" : "-"}</span>
+              {Math.abs(log.score_change)}
             </div>
 
             <div className="flex items-center pr-1 font-sans text-base opacity-60">
