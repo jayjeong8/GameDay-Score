@@ -40,6 +40,14 @@ export async function updateTeamScore(
     throw new Error("Team not found");
   }
 
+  // 점수 업데이트 기록 저장
+  await server.from("score_updates").insert({
+    team_id: teamId,
+    team_name: team.team_name,
+    score_change: scoreChange,
+    game_type: gameType,
+  });
+
   // 팀 점수 업데이트
   await server
     .from("teams")
@@ -86,13 +94,6 @@ export async function updateTeamScore(
       })
       .eq("id", currentTeam.id);
   }
-
-  // 점수 업데이트 기록 저장
-  await server.from("score_updates").insert({
-    team_id: teamId,
-    score_change: scoreChange,
-    game_type: gameType,
-  });
 
   revalidatePath("/");
 }
