@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 export default function RankingList({ teams }: { teams: Team[] }) {
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
@@ -35,45 +36,57 @@ export default function RankingList({ teams }: { teams: Team[] }) {
 
   return (
     <div className="p-4">
-      <h1 className="mb-10 text-2xl font-bold">팀 랭킹</h1>
-      <div className="space-y-2">
+      <ul className="space-y-2 font-semibold">
         {teams?.map((team) => (
-          <div
+          <li
             key={team.id}
-            className="flex items-center justify-between rounded-lg bg-white p-4 shadow"
+            className={cn(
+              "flex items-center rounded-lg p-4",
+              "bg-slate-900/70 bg-linear-to-b from-pink-500/20 to-cyan-800/20 shadow-[inset_0_20px_20px_-18px_rgba(255,255,255,0.3)] drop-shadow-md",
+            )}
           >
-            <div>
-              <div className="flex items-center space-x-4">
-                <span className="text-lg font-semibold">#{team.rank}</span>
-                {team.rank_diff !== 0 && (
+            <div className="flex w-24 flex-col items-center px-4 text-5xl text-cyan-400/90">
+              {team.rank}
+
+              <div className="mt-2 pr-0.5 text-sm font-medium text-slate-400">
+                {team.rank_diff === 0 ? (
+                  "-"
+                ) : (
                   <span
-                    className={
-                      team.rank_diff > 0 ? "text-green-500" : "text-red-500"
-                    }
+                    className={cn(
+                      "pr-0.5",
+                      team.rank_diff > 0 ? "text-green-300" : "text-red-300",
+                    )}
                   >
-                    ({team.rank_diff > 0 ? "+" : ""}
-                    {team.rank_diff})
+                    {team.rank_diff > 0 ? "+" : ""}
+                    {team.rank_diff}
                   </span>
                 )}
-                <span className="text-lg">{team.team_name}</span>
-              </div>
-              <div className="text-sm text-gray-600">
-                점수: {team.total_score}
               </div>
             </div>
+
+            <div className="w-30 px-6 text-end text-4xl font-light text-slate-100/95">
+              {team.team_name}
+            </div>
+
+            <div className="flex grow justify-end px-5 text-5xl tracking-tighter text-pink-400 tabular-nums">
+              {team.total_score}
+            </div>
+
             <Button
               variant="ghost"
-              size="icon"
+              size="default"
               onClick={() => {
                 setSelectedTeam(team);
                 setIsModalOpen(true);
               }}
+              className="group ml-auto w-12 cursor-pointer hover:bg-slate-50/0"
             >
-              <ChevronRight className="h-6 w-6" />
+              <ChevronRight className="size-8 stroke-slate-400/50 group-hover:stroke-slate-300" />
             </Button>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
