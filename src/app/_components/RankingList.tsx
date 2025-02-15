@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 export default function RankingList({ teams }: { teams: Team[] }) {
   return (
-    <div className="p-4">
+    <section>
       <ul className="space-y-2 font-semibold">
         {teams?.map((team) => (
           <li
@@ -43,6 +43,6 @@ export default function RankingList({ teams }: { teams: Team[] }) {
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 }
