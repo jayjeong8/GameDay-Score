@@ -109,6 +109,13 @@ export default function ScoreUpdater({ teams }: { teams: Team[] }) {
               {btn.label}
             </Button>
           ))}
+          <Button
+            onClick={() => setScoreChange((prev) => prev * -1)}
+            variant="outline"
+            className="flex-1"
+          >
+            음수
+          </Button>
         </div>
       </section>
 
