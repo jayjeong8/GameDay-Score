@@ -1,7 +1,7 @@
 "use client";
 
 import type { Team } from "@/app/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { updateTeamScore } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -68,6 +68,15 @@ export default function ScoreUpdater({ teams }: { teams: Team[] }) {
       console.error("Failed to update score:", error);
     }
   };
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+
+    if (url.searchParams.has("adminKey")) {
+      const cleanUrl = `${window.location.pathname}`;
+      window.history.replaceState({}, "", cleanUrl);
+    }
+  }, []);
 
   return (
     <main className="space-y-12 p-10">
