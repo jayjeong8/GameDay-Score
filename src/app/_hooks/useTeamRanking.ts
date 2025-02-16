@@ -12,7 +12,7 @@ export default function useTeamRanking({
   const [teams, setTeams] = useState<TeamWithRank[]>([]);
 
   useEffect(() => {
-    setTeams(calcRanking(serverTeams, []));
+    setTeams(calcRanking(sortByScore(serverTeams), []));
   }, [serverTeams]);
 
   useEffect(() => {
