@@ -10,7 +10,7 @@ export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
   const [teams, setTeams] = useState<TeamWithRank[]>([]);
 
   useEffect(() => {
-    setTeams(calcTeamsRank(serverTeams, []));
+    setTeams(calcRanking(serverTeams, []));
   }, [serverTeams]);
 
   useEffect(() => {
@@ -25,13 +25,13 @@ export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
         },
         (payload: RealtimePostgresUpdatePayload<Team>) => {
           setTeams((currentTeams) => {
-            const sortedTeams = sortTeamsByScore([
+            const updatedTeams = [
               payload.new,
               ...currentTeams.filter((team) => team.id !== payload.new.id),
-            ]);
-            const teamsWithRank = calcTeamsRank(sortedTeams, teams);
+            ];
+            const sortedTeams = sortByScore(updatedTeams);
 
-            return teamsWithRank;
+            return calcRanking(sortedTeams, teams);
           });
         },
       )
@@ -43,7 +43,7 @@ export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
     };
   }, [serverTeams, teams]);
 
-  const sortTeamsByScore = (teams: Team[]) =>
+  const sortByScore = (teams: Team[]) =>
     teams.toSorted((a, b) => {
       if (a.total_score === b.total_score) {
         return a.team_name.localeCompare(b.team_name);
@@ -52,7 +52,7 @@ export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
       return b.total_score - a.total_score;
     });
 
-  const calcTeamsRank = (
+  const calcRanking = (
     sortedTeams: Team[],
     oldTeams: TeamWithRank[],
   ): TeamWithRank[] => {
