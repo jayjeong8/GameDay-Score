@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 export default function RankingList({ teams }: { teams: Team[] }) {
   return (
     <section>
-      <ul className="space-y-4 font-semibold">
+      <ul className="space-y-2 font-semibold">
         {teams?.map((team) => (
           <li
             key={team.id}
