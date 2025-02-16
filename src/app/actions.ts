@@ -33,7 +33,7 @@ export async function getScoreUpdates() {
     .from("score_updates")
     .select("*")
     .order("created_at", { ascending: false })
-    .limit(19);
+    .limit(18);
 
   return scoreUpdates as ScoreUpdate[];
 }
