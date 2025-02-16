@@ -9,14 +9,16 @@ export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
 
   return (
     <section>
-      <ul className="space-y-2 font-semibold">
-        {teams.map((team) => (
+      <ul className="relative font-semibold">
+        {teams.map((team, i) => (
           <li
             key={team.id}
             className={cn(
-              "flex items-center rounded-lg border border-cyan-400/20 p-4",
+              "absolute flex w-full items-center rounded-lg border border-cyan-400/20 p-4",
               "bg-slate-900/70 bg-linear-to-b from-pink-500/20 to-cyan-800/20 shadow-[inset_0_20px_20px_-18px_rgba(255,255,255,0.3)] drop-shadow-md",
+              "transition-transform duration-500 ease-in-out",
             )}
+            style={{ transform: `translateY(${i * 7.25}rem)` }}
           >
             <div className="flex w-24 flex-col items-center px-4 text-5xl text-cyan-400/90">
               {team.rank}
