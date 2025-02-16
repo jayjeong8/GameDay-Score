@@ -1,6 +1,7 @@
 import type { ScoreUpdate } from "@/app/types";
 import type { RealtimePostgresInsertPayload } from "@supabase/realtime-js/src/RealtimeChannel";
 import { useEffect, useState } from "react";
+import { maxScoreUpdatesCount } from "@/app/_constant/number";
 import supabase from "@/utils/supabase/supabase";
 
 export default function useScoreUpdates({
@@ -25,7 +26,10 @@ export default function useScoreUpdates({
           table: "score_updates",
         },
         (payload: RealtimePostgresInsertPayload<ScoreUpdate>) => {
-          setScoreUpdates((current) => [payload.new, ...current.slice(0, -1)]);
+          setScoreUpdates((current) => [
+            payload.new,
+            ...current.slice(0, maxScoreUpdatesCount - 1),
+          ]);
         },
       )
       .subscribe();

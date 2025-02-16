@@ -2,6 +2,7 @@
 
 import type { Team, ScoreUpdate } from "@/app/types";
 import { revalidatePath } from "next/cache";
+import { maxScoreUpdatesCount } from "@/app/_constant/number";
 import { createClient } from "@/utils/supabase/server";
 
 export async function getTeamsByScoreAsc() {
@@ -33,7 +34,7 @@ export async function getScoreUpdates() {
     .from("score_updates")
     .select("*")
     .order("created_at", { ascending: false })
-    .limit(18);
+    .limit(maxScoreUpdatesCount);
 
   return scoreUpdates as ScoreUpdate[];
 }
