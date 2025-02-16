@@ -34,7 +34,7 @@ export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
                 ) : (
                   <span
                     className={cn(
-                      "pr-0.5",
+                      "animate-pulse pr-0.5 duration-200 ease-in",
                       team.rank_diff > 0 ? "text-green-300" : "text-red-300",
                     )}
                   >
