@@ -1,82 +1,11 @@
 "use client";
 
-import type { Team, TeamWithRank } from "@/app/types";
-import type { RealtimePostgresUpdatePayload } from "@supabase/realtime-js/dist/module/RealtimeChannel";
-import { useEffect, useState } from "react";
+import type { Team } from "@/app/types";
+import useTeamRanking from "@/app/_hooks/useTeamRanking";
 import { cn } from "@/lib/utils";
-import supabase from "@/utils/supabase/supabase";
 
 export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
-  const [teams, setTeams] = useState<TeamWithRank[]>([]);
-
-  useEffect(() => {
-    setTeams(calcRanking(serverTeams, []));
-  }, [serverTeams]);
-
-  useEffect(() => {
-    const channel = supabase
-      .channel("team-ranking")
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "teams",
-        },
-        (payload: RealtimePostgresUpdatePayload<Team>) => {
-          setTeams((currentTeams) => {
-            const updatedTeams = [
-              payload.new,
-              ...currentTeams.filter((team) => team.id !== payload.new.id),
-            ];
-            const sortedTeams = sortByScore(updatedTeams);
-
-            return calcRanking(sortedTeams, teams);
-          });
-        },
-      )
-      .subscribe();
-
-    // 컴포넌트 언마운트 시 구독 해제
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [serverTeams, teams]);
-
-  const sortByScore = (teams: Team[]) =>
-    teams.toSorted((a, b) => {
-      if (a.total_score === b.total_score) {
-        return a.team_name.localeCompare(b.team_name);
-      }
-
-      return b.total_score - a.total_score;
-    });
-
-  const calcRanking = (
-    sortedTeams: Team[],
-    oldTeams: TeamWithRank[],
-  ): TeamWithRank[] => {
-    let prevNewTeam: TeamWithRank | null = null;
-
-    return sortedTeams.map((team, index) => {
-      const rank =
-        prevNewTeam?.total_score === team.total_score
-          ? prevNewTeam.rank
-          : index + 1;
-
-      const oldTeam = oldTeams.find((oldTeam) => oldTeam.id === team.id);
-      const rankDiff = oldTeam ? oldTeam.rank - rank : 0;
-
-      const newTeam: TeamWithRank = {
-        ...team,
-        rank,
-        rank_diff: rankDiff,
-      };
-      prevNewTeam = newTeam;
-
-      return newTeam;
-    });
-  };
+  const teams = useTeamRanking({ serverTeams });
 
   return (
     <section>
