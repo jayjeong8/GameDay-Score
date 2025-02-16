@@ -7,9 +7,15 @@ import { cn } from "@/lib/utils";
 export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
   const teams = useTeamRanking({ serverTeams });
 
+  const liHeight = 7.25;
+  const ulHeight = (liHeight - 0.05) * teams.length;
+
   return (
     <section>
-      <ul className="relative font-semibold">
+      <ul
+        className="relative font-semibold"
+        style={{ height: `${ulHeight}rem` }}
+      >
         {teams.map((team, i) => (
           <li
             key={team.id}
