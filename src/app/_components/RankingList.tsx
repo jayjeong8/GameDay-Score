@@ -14,14 +14,19 @@ export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
           <li
             key={team.id}
             className={cn(
-              "absolute flex w-full items-center rounded-lg border border-cyan-400/20 p-4",
+              "absolute flex w-full items-center rounded-lg border border-cyan-400/20 px-8 py-4",
               "bg-slate-900/70 bg-linear-to-b from-pink-500/20 to-cyan-800/20 shadow-[inset_0_20px_20px_-18px_rgba(255,255,255,0.3)] drop-shadow-md",
               "transition-transform duration-500 ease-in-out",
             )}
             style={{ transform: `translateY(${i * 7.25}rem)` }}
           >
-            <div className="flex w-24 flex-col items-center px-4 text-5xl text-cyan-400/90">
-              {team.rank}
+            <div className="flex w-24 flex-col items-center px-4 text-5xl text-cyan-400">
+              <span
+                className="drop-shadow-glow"
+                style={{ opacity: Math.max(1 - team.rank * 0.08, 0.3) }}
+              >
+                {team.rank}
+              </span>
 
               <div className="mt-2 pr-0.5 text-sm font-medium text-slate-400">
                 {team.rank_diff === 0 ? (
@@ -40,11 +45,11 @@ export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
               </div>
             </div>
 
-            <div className="w-30 px-6 text-end text-4xl font-light text-slate-100/95">
+            <div className="drop-shadow-glow ml-8 w-30 text-end text-5xl font-light text-slate-100/95">
               {team.team_name}
             </div>
 
-            <div className="flex grow justify-end pr-7 text-5xl tracking-tighter text-pink-400 tabular-nums">
+            <div className="drop-shadow-glow flex grow justify-end pr-7 text-5xl tracking-tighter text-pink-400 tabular-nums">
               {team.total_score}
             </div>
           </li>

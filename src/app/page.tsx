@@ -18,7 +18,7 @@ export default async function Home() {
           width={396}
           height={63}
           priority
-          className="animate-duration-[2500ms] animate-ease-in animate-bounce"
+          className="animate-duration-[2500ms] animate-ease-in drop-shadow-glow animate-bounce"
         />
       </header>
       <section className="grid h-fit w-full grid-cols-[2fr_1.2fr] gap-4">

@@ -30,7 +30,9 @@ export default function ScoreLogs({
               {formatTime(log.created_at)}
             </div>
 
-            <div className="justify-self-end break-keep">{log.team_name}</div>
+            <div className="drop-shadow-glow justify-self-end break-keep">
+              {log.team_name}
+            </div>
 
             <div className="ml-8 text-xl break-keep">{log.game_type}</div>
 
