@@ -3,6 +3,8 @@ import RankingList from "./_components/RankingList";
 import { getScoreUpdates, getTeamsByRankAsc } from "./actions";
 import ScoreLogs from "@/app/_components/ScoreLogs";
 
+export const revalidate = 0;
+
 export default async function Home() {
   const teams = await getTeamsByRankAsc();
   const scoreUpdates = await getScoreUpdates();
@@ -20,8 +22,8 @@ export default async function Home() {
         />
       </header>
       <section className="grid h-fit w-full grid-cols-[2fr_1.2fr] gap-4">
-        <RankingList teams={teams} />
-        <ScoreLogs scoreUpdates={scoreUpdates} />
+        <RankingList serverTeams={teams} />
+        <ScoreLogs serverUpdates={scoreUpdates} />
       </section>
     </main>
   );

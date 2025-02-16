@@ -1,11 +1,43 @@
+"use client";
+
 import type { ScoreUpdate } from "@/app/types";
+import type { RealtimePostgresInsertPayload } from "@supabase/realtime-js/src/RealtimeChannel";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import supabase from "@/utils/supabase/supabase";
 
 export default function ScoreLogs({
-  scoreUpdates,
+  serverUpdates,
 }: {
-  scoreUpdates: ScoreUpdate[];
+  serverUpdates: ScoreUpdate[];
 }) {
+  const [scoreUpdates, setScoreUpdates] = useState(serverUpdates);
+
+  useEffect(() => {
+    setScoreUpdates(serverUpdates);
+  }, [serverUpdates]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("score-logs")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "score_updates",
+        },
+        (payload: RealtimePostgresInsertPayload<ScoreUpdate>) => {
+          setScoreUpdates((current) => [payload.new, ...current.slice(0, -1)]);
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   const formatTime = (date: string) => {
     return new Intl.DateTimeFormat("ko-KR", {
       timeZone: "Asia/Seoul",

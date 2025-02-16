@@ -1,7 +1,44 @@
-import type { Team } from "@/app/types";
-import { cn } from "@/lib/utils";
+"use client";
 
-export default function RankingList({ teams }: { teams: Team[] }) {
+import type { Team } from "@/app/types";
+import type { RealtimePostgresUpdatePayload } from "@supabase/realtime-js/dist/module/RealtimeChannel";
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import supabase from "@/utils/supabase/supabase";
+
+export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
+  const [teams, setTeams] = useState(serverTeams);
+
+  useEffect(() => {
+    setTeams(serverTeams);
+  }, [serverTeams]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel("team-ranking")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "teams",
+        },
+        (payload: RealtimePostgresUpdatePayload<Team>) => {
+          setTeams((currentTeams) =>
+            currentTeams.map((team) =>
+              team.id === payload.new.id ? payload.new : team,
+            ),
+          );
+        },
+      )
+      .subscribe();
+
+    // 컴포넌트 언마운트 시 구독 해제
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [serverTeams]);
+
   return (
     <section>
       <ul className="space-y-2 font-semibold">
