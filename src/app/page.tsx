@@ -1,12 +1,12 @@
 import Image from "next/image";
 import RankingList from "./_components/RankingList";
-import { getScoreUpdates, getTeamsByRankAsc } from "./actions";
+import { getScoreUpdates, getTeamsByScoreAsc } from "./actions";
 import ScoreLogs from "@/app/_components/ScoreLogs";
 
 export const revalidate = 0;
 
 export default async function Home() {
-  const teams = await getTeamsByRankAsc();
+  const teams = await getTeamsByScoreAsc();
   const scoreUpdates = await getScoreUpdates();
 
   return (

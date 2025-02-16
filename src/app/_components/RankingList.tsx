@@ -1,16 +1,16 @@
 "use client";
 
-import type { Team } from "@/app/types";
+import type { Team, TeamWithRank } from "@/app/types";
 import type { RealtimePostgresUpdatePayload } from "@supabase/realtime-js/dist/module/RealtimeChannel";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import supabase from "@/utils/supabase/supabase";
 
 export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
-  const [teams, setTeams] = useState(serverTeams);
+  const [teams, setTeams] = useState<TeamWithRank[]>([]);
 
   useEffect(() => {
-    setTeams(serverTeams);
+    setTeams(calcTeamsRank(serverTeams, []));
   }, [serverTeams]);
 
   useEffect(() => {
@@ -24,11 +24,15 @@ export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
           table: "teams",
         },
         (payload: RealtimePostgresUpdatePayload<Team>) => {
-          setTeams((currentTeams) =>
-            currentTeams.map((team) =>
-              team.id === payload.new.id ? payload.new : team,
-            ),
-          );
+          setTeams((currentTeams) => {
+            const sortedTeams = sortTeamsByScore([
+              payload.new,
+              ...currentTeams.filter((team) => team.id !== payload.new.id),
+            ]);
+            const teamsWithRank = calcTeamsRank(sortedTeams, teams);
+
+            return teamsWithRank;
+          });
         },
       )
       .subscribe();
@@ -37,12 +41,47 @@ export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [serverTeams]);
+  }, [serverTeams, teams]);
+
+  const sortTeamsByScore = (teams: Team[]) =>
+    teams.toSorted((a, b) => {
+      if (a.total_score === b.total_score) {
+        return a.team_name.localeCompare(b.team_name);
+      }
+
+      return b.total_score - a.total_score;
+    });
+
+  const calcTeamsRank = (
+    sortedTeams: Team[],
+    oldTeams: TeamWithRank[],
+  ): TeamWithRank[] => {
+    let prevNewTeam: TeamWithRank = oldTeams[0];
+
+    return sortedTeams.map((team, index) => {
+      let currentRank = index + 1;
+
+      // 첫 번째 팀이 아니고, 이전 팀과 점수가 같으면 이전 팀의 순위를 사용
+      if (index > 0 && team.total_score === prevNewTeam.total_score) {
+        currentRank = prevNewTeam.rank;
+      }
+
+      const oldTeam = oldTeams.find((oldTeam) => oldTeam.id === team.id);
+      const newTeam: TeamWithRank = {
+        ...team,
+        rank: currentRank,
+        rank_diff: oldTeam?.rank ? oldTeam.rank - currentRank : 0,
+      };
+      prevNewTeam = newTeam;
+
+      return newTeam;
+    });
+  };
 
   return (
     <section>
       <ul className="space-y-2 font-semibold">
-        {teams?.map((team) => (
+        {teams.map((team) => (
           <li
             key={team.id}
             className={cn(

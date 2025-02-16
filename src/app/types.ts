@@ -2,9 +2,12 @@ export interface Team {
   id: number;
   team_name: string;
   total_score: number;
+  created_at: string;
+}
+
+export interface TeamWithRank extends Team {
   rank: number;
   rank_diff: number;
-  created_at: string;
 }
 
 export interface ScoreUpdate {
