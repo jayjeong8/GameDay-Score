@@ -56,21 +56,21 @@ export default function RankingList({ serverTeams }: { serverTeams: Team[] }) {
     sortedTeams: Team[],
     oldTeams: TeamWithRank[],
   ): TeamWithRank[] => {
-    let prevNewTeam: TeamWithRank = oldTeams[0];
+    let prevNewTeam: TeamWithRank | null = null;
 
     return sortedTeams.map((team, index) => {
-      let currentRank = index + 1;
-
-      // 첫 번째 팀이 아니고, 이전 팀과 점수가 같으면 이전 팀의 순위를 사용
-      if (index > 0 && team.total_score === prevNewTeam.total_score) {
-        currentRank = prevNewTeam.rank;
-      }
+      const rank =
+        prevNewTeam?.total_score === team.total_score
+          ? prevNewTeam.rank
+          : index + 1;
 
       const oldTeam = oldTeams.find((oldTeam) => oldTeam.id === team.id);
+      const rankDiff = oldTeam ? oldTeam.rank - rank : 0;
+
       const newTeam: TeamWithRank = {
         ...team,
-        rank: currentRank,
-        rank_diff: oldTeam?.rank ? oldTeam.rank - currentRank : 0,
+        rank,
+        rank_diff: rankDiff,
       };
       prevNewTeam = newTeam;
 
